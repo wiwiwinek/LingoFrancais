@@ -1,0 +1,1344 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="default">
+  <title>LingoFrançais - Học Tiếng Pháp</title>
+  <style>
+:root {
+  --primary: #4f46e5;
+  --primary-dark: #4338ca;
+  --primary-light: #e0e7ff;
+  --accent: #f59e0b;
+  --success: #10b981;
+  --success-dark: #059669;
+  --error: #ef4444;
+  --error-dark: #dc2626;
+  --bg: #f8fafc;
+  --surface: #ffffff;
+  --text: #1e293b;
+  --text-muted: #64748b;
+  --border: #e2e8f0;
+  --radius-lg: 20px;
+  --radius-md: 14px;
+  --radius-sm: 8px;
+}
+
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+  -webkit-tap-highlight-color: transparent;
+  user-select: none;
+}
+
+body {
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+  background-color: var(--bg);
+  color: var(--text);
+  line-height: 1.5;
+  min-height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: stretch;
+  padding-top: env(safe-area-inset-top, 0px);
+  padding-bottom: env(safe-area-inset-bottom, 0px);
+  overflow-x: hidden;
+}
+
+#app-container {
+  width: 100%;
+  max-width: 480px;
+  background-color: var(--surface);
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  position: relative;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.05);
+}
+
+/* TOP HEADER */
+.app-header {
+  padding: 16px 20px;
+  background: var(--surface);
+  border-bottom: 1px solid var(--border);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  position: sticky;
+  top: 0;
+  z-index: 10;
+}
+
+.logo-area {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.logo-icon {
+  font-size: 26px;
+}
+
+.logo-title {
+  font-size: 19px;
+  font-weight: 800;
+  background: linear-gradient(135deg, var(--primary), #8b5cf6);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+.stats-bar {
+  display: flex;
+  gap: 12px;
+}
+
+.stat-pill {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  background: #f1f5f9;
+  padding: 5px 12px;
+  border-radius: 20px;
+  font-size: 13px;
+  font-weight: 700;
+  color: var(--text);
+}
+
+.stat-pill.streak { color: #ea580c; background: #fff7ed; }
+.stat-pill.xp { color: #d97706; background: #fef3c7; }
+.stat-pill.hearts { color: #e11d48; background: #ffe4e6; }
+
+/* MAIN CONTENT AREA */
+.main-view {
+  flex: 1;
+  padding: 20px 16px 85px 16px;
+  overflow-y: auto;
+}
+
+/* TAB NAVIGATION BAR */
+.tab-bar {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  max-width: 480px;
+  margin: 0 auto;
+  height: 65px;
+  background: var(--surface);
+  border-top: 1px solid var(--border);
+  display: flex;
+  justify-content: space-around;
+  align-items: center;
+  z-index: 20;
+  padding-bottom: env(safe-area-inset-bottom, 0px);
+}
+
+.tab-btn {
+  background: none;
+  border: none;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 3px;
+  color: var(--text-muted);
+  font-size: 11px;
+  font-weight: 600;
+  cursor: pointer;
+  padding: 6px 12px;
+  transition: all 0.2s ease;
+}
+
+.tab-btn .tab-icon {
+  font-size: 20px;
+}
+
+.tab-btn.active {
+  color: var(--primary);
+}
+
+/* LESSON CARD */
+.section-title {
+  font-size: 17px;
+  font-weight: 800;
+  margin-bottom: 12px;
+  color: var(--text);
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.lesson-card {
+  background: var(--surface);
+  border: 2px solid var(--border);
+  border-bottom: 5px solid var(--border);
+  border-radius: var(--radius-lg);
+  padding: 18px;
+  margin-bottom: 16px;
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  cursor: pointer;
+  transition: transform 0.1s ease, border-color 0.2s ease;
+}
+
+.lesson-card:active {
+  transform: translateY(2px);
+  border-bottom-width: 3px;
+}
+
+.lesson-card.completed {
+  border-color: #a7f3d0;
+  background: #f0fdf4;
+}
+
+.lesson-icon-box {
+  width: 54px;
+  height: 54px;
+  border-radius: 16px;
+  background: var(--primary-light);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 26px;
+  flex-shrink: 0;
+}
+
+.lesson-card.completed .lesson-icon-box {
+  background: #dcfce7;
+}
+
+.lesson-info {
+  flex: 1;
+}
+
+.lesson-heading {
+  font-size: 15px;
+  font-weight: 700;
+  color: var(--text);
+}
+
+.lesson-sub {
+  font-size: 12px;
+  color: var(--text-muted);
+  margin-top: 2px;
+}
+
+.lesson-badge {
+  display: inline-block;
+  font-size: 11px;
+  font-weight: 700;
+  padding: 2px 8px;
+  border-radius: 10px;
+  margin-top: 6px;
+}
+
+.badge-new { background: #e0e7ff; color: var(--primary); }
+.badge-done { background: #d1fae5; color: var(--success-dark); }
+
+/* EXERCISE / QUIZ MODAL */
+.quiz-screen {
+  position: fixed;
+  inset: 0;
+  max-width: 480px;
+  margin: 0 auto;
+  background: var(--surface);
+  z-index: 100;
+  display: flex;
+  flex-direction: column;
+  padding-top: env(safe-area-inset-top, 10px);
+  padding-bottom: env(safe-area-inset-bottom, 10px);
+}
+
+.quiz-header {
+  padding: 12px 16px;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.quiz-close-btn {
+  background: none;
+  border: none;
+  font-size: 22px;
+  color: var(--text-muted);
+  cursor: pointer;
+  padding: 4px 8px;
+}
+
+.progress-track {
+  flex: 1;
+  height: 12px;
+  background: #e2e8f0;
+  border-radius: 8px;
+  overflow: hidden;
+}
+
+.progress-fill {
+  height: 100%;
+  width: 0%;
+  background: linear-gradient(90deg, #10b981, #059669);
+  transition: width 0.3s ease;
+  border-radius: 8px;
+}
+
+.quiz-body {
+  flex: 1;
+  padding: 20px 18px;
+  overflow-y: auto;
+  display: flex;
+  flex-direction: column;
+}
+
+.quiz-prompt {
+  font-size: 18px;
+  font-weight: 800;
+  color: var(--text);
+  margin-bottom: 20px;
+}
+
+/* AUDIO BUTTON */
+.audio-btn-large {
+  align-self: center;
+  background: var(--primary);
+  border: none;
+  border-bottom: 4px solid var(--primary-dark);
+  color: white;
+  width: 72px;
+  height: 72px;
+  border-radius: 50%;
+  font-size: 30px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  margin: 15px 0 25px 0;
+  transition: transform 0.1s ease;
+}
+
+.audio-btn-large:active {
+  transform: translateY(2px);
+  border-bottom-width: 2px;
+}
+
+/* FLASHCARD */
+.flashcard-box {
+  background: linear-gradient(135deg, #f0f4ff, #faf5ff);
+  border: 2px solid #c7d2fe;
+  border-radius: var(--radius-lg);
+  padding: 24px;
+  text-align: center;
+  margin: 20px 0;
+  box-shadow: 0 4px 12px rgba(79, 70, 229, 0.08);
+}
+
+.flashcard-word {
+  font-size: 28px;
+  font-weight: 800;
+  color: var(--primary);
+}
+
+.flashcard-ipa {
+  font-size: 14px;
+  color: var(--text-muted);
+  margin: 4px 0 12px 0;
+}
+
+.flashcard-vn {
+  font-size: 18px;
+  font-weight: 700;
+  color: var(--text);
+  margin-top: 8px;
+  padding-top: 8px;
+  border-top: 1px dashed #cbd5e1;
+}
+
+/* CHOICE OPTIONS */
+.options-grid {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  margin-top: auto;
+  margin-bottom: 20px;
+}
+
+.option-btn {
+  background: var(--surface);
+  border: 2px solid var(--border);
+  border-bottom: 4px solid var(--border);
+  border-radius: var(--radius-md);
+  padding: 14px 18px;
+  font-size: 16px;
+  font-weight: 700;
+  color: var(--text);
+  text-align: left;
+  cursor: pointer;
+  transition: all 0.1s ease;
+}
+
+.option-btn:active {
+  transform: translateY(2px);
+  border-bottom-width: 2px;
+}
+
+.option-btn.selected {
+  border-color: var(--primary);
+  background: var(--primary-light);
+  color: var(--primary);
+}
+
+/* SCRAMBLE CHIPS */
+.scramble-zone {
+  min-height: 70px;
+  background: #f1f5f9;
+  border: 2px dashed #cbd5e1;
+  border-radius: var(--radius-md);
+  padding: 12px;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  align-items: center;
+  margin-bottom: 24px;
+}
+
+.word-pool {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  justify-content: center;
+  margin-top: auto;
+  margin-bottom: 30px;
+}
+
+.word-chip {
+  background: var(--surface);
+  border: 2px solid var(--border);
+  border-bottom: 3px solid var(--border);
+  border-radius: var(--radius-sm);
+  padding: 8px 14px;
+  font-size: 15px;
+  font-weight: 700;
+  color: var(--text);
+  cursor: pointer;
+  transition: all 0.1s ease;
+}
+
+.word-chip:active {
+  transform: translateY(2px);
+  border-bottom-width: 1px;
+}
+
+.word-chip.used {
+  opacity: 0.3;
+  pointer-events: none;
+}
+
+/* BOTTOM ACTION & FEEDBACK */
+.quiz-footer {
+  padding: 14px 18px;
+  border-top: 1px solid var(--border);
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.action-btn {
+  background: var(--primary);
+  border: none;
+  border-bottom: 4px solid var(--primary-dark);
+  color: white;
+  padding: 14px;
+  font-size: 16px;
+  font-weight: 800;
+  border-radius: var(--radius-md);
+  cursor: pointer;
+  text-align: center;
+  transition: transform 0.1s ease;
+}
+
+.action-btn:active {
+  transform: translateY(2px);
+  border-bottom-width: 2px;
+}
+
+.action-btn:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+  transform: none;
+}
+
+.feedback-sheet {
+  padding: 14px 16px;
+  border-radius: var(--radius-md);
+  display: none;
+  animation: slideUp 0.2s ease;
+}
+
+.feedback-sheet.correct {
+  display: block;
+  background: #dcfce7;
+  border: 2px solid #86efac;
+  color: #14532d;
+}
+
+.feedback-sheet.wrong {
+  display: block;
+  background: #fee2e2;
+  border: 2px solid #fca5a5;
+  color: #7f1d1d;
+}
+
+.feedback-title {
+  font-size: 16px;
+  font-weight: 800;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.feedback-desc {
+  font-size: 13px;
+  margin-top: 4px;
+  font-weight: 500;
+}
+
+/* VOCABULARY LIST */
+.vocab-card {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-md);
+  padding: 14px;
+  margin-bottom: 10px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.vocab-fr {
+  font-size: 16px;
+  font-weight: 800;
+  color: var(--primary);
+}
+
+.vocab-ipa {
+  font-size: 12px;
+  color: var(--text-muted);
+}
+
+.vocab-vn {
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--text);
+  margin-top: 2px;
+}
+
+.speak-icon-btn {
+  background: var(--primary-light);
+  border: none;
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  color: var(--primary);
+  font-size: 18px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+@keyframes slideUp {
+  from { transform: translateY(10px); opacity: 0; }
+  to { transform: translateY(0); opacity: 1; }
+}
+
+</style>
+</head>
+<body>
+
+<div id="app-container">
+
+  <!-- TOP APP HEADER -->
+  <header class="app-header">
+    <div class="logo-area">
+      <span class="logo-icon">🇫🇷</span>
+      <span class="logo-title">LingoFrançais</span>
+    </div>
+    <div class="stats-bar">
+      <div class="stat-pill streak" title="Chuỗi ngày học liên tục">
+        <span>🔥</span><span id="streak-count">1</span>
+      </div>
+      <div class="stat-pill xp" title="Kinh nghiệm">
+        <span>⚡</span><span id="xp-count">0</span>
+      </div>
+      <div class="stat-pill hearts" title="Mạng sống">
+        <span>❤️</span><span id="hearts-count">5</span>
+      </div>
+    </div>
+  </header>
+
+  <!-- VIEW 1: LỘ TRÌNH HỌC TẬP (LEARN) -->
+  <main id="view-learn" class="main-view">
+    <div class="section-title">
+      <span>📚</span><span>Lộ trình Tiếng Pháp A1</span>
+    </div>
+    <div id="lessons-list">
+      <!-- Lesson cards rendered dynamically -->
+    </div>
+  </main>
+
+  <!-- VIEW 2: TỔNG HỢP TỪ VỰNG (VOCABULARY) -->
+  <main id="view-vocab" class="main-view" style="display: none;">
+    <div class="section-title">
+      <span>📖</span><span>Sổ tay từ vựng & Phát âm</span>
+    </div>
+    <div id="vocab-list">
+      <!-- Vocab list rendered dynamically -->
+    </div>
+  </main>
+
+  <!-- VIEW 3: HỒ SƠ & THÀNH TỰU (PROFILE) -->
+  <main id="view-profile" class="main-view" style="display: none;">
+    <div class="section-title">
+      <span>👤</span><span>Hồ sơ học tập</span>
+    </div>
+    <div class="flashcard-box" style="text-align: left;">
+      <h3 style="font-size: 20px; font-weight: 800; color: var(--text);">Học viên Tiếng Pháp</h3>
+      <p style="color: var(--text-muted); font-size: 13px; margin-top: 4px;">Đang học: Trình độ A1 Cơ Bản</p>
+      <div style="margin-top: 16px; display: grid; grid-template-columns: 1fr 1fr; gap: 12px;">
+        <div style="background: white; padding: 12px; border-radius: 12px; border: 1px solid var(--border);">
+          <div style="font-size: 12px; color: var(--text-muted);">Tổng bài đã xong</div>
+          <div id="profile-completed-count" style="font-size: 22px; font-weight: 800; color: var(--primary);">0</div>
+        </div>
+        <div style="background: white; padding: 12px; border-radius: 12px; border: 1px solid var(--border);">
+          <div style="font-size: 12px; color: var(--text-muted);">Tổng điểm XP</div>
+          <div id="profile-total-xp" style="font-size: 22px; font-weight: 800; color: var(--accent);">0</div>
+        </div>
+      </div>
+      <button id="btn-reset-data" style="margin-top: 20px; width: 100%; background: #fee2e2; border: 1px solid #fca5a5; color: #dc2626; padding: 10px; border-radius: 10px; font-weight: 700; cursor: pointer;">
+        Đặt lại dữ liệu học tập
+      </button>
+    </div>
+  </main>
+
+  <!-- BOTTOM TAB BAR -->
+  <nav class="tab-bar">
+    <button class="tab-btn active" data-view="learn">
+      <span class="tab-icon">🎓</span>
+      <span>Học tập</span>
+    </button>
+    <button class="tab-btn" data-view="vocab">
+      <span class="tab-icon">📖</span>
+      <span>Từ vựng</span>
+    </button>
+    <button class="tab-btn" data-view="profile">
+      <span class="tab-icon">👤</span>
+      <span>Hồ sơ</span>
+    </button>
+  </nav>
+
+  <!-- MODAL: QUIZ / EXERCISE SCREEN -->
+  <div id="quiz-screen" class="quiz-screen" style="display: none;">
+    <div class="quiz-header">
+      <button id="quiz-close-btn" class="quiz-close-btn">✕</button>
+      <div class="progress-track">
+        <div id="quiz-progress-bar" class="progress-fill"></div>
+      </div>
+      <div class="stat-pill hearts" style="padding: 3px 8px;">
+        <span>❤️</span><span id="quiz-hearts-count">5</span>
+      </div>
+    </div>
+
+    <div id="quiz-body" class="quiz-body">
+      <!-- Dynamic Exercise Content injected here -->
+    </div>
+
+    <div class="quiz-footer">
+      <div id="feedback-sheet" class="feedback-sheet">
+        <div id="feedback-title" class="feedback-title"></div>
+        <div id="feedback-desc" class="feedback-desc"></div>
+      </div>
+      <button id="quiz-action-btn" class="action-btn">Kiểm tra</button>
+    </div>
+  </div>
+
+</div>
+
+<script>
+// Dữ liệu bài học Tiếng Pháp cho người Việt (LingoFrancais)
+const LESSONS_DATA = [
+  {
+    id: 1,
+    title: "Bài 1: Chào hỏi & Làm quen",
+    subtitle: "Salutations & Premiers contacts",
+    icon: "👋",
+    desc: "Học các câu chào hỏi lịch sự và giới thiệu cơ bản nhất.",
+    xpReward: 20,
+    vocab: [
+      { french: "Bonjour", ipa: "/bɔ̃.ʒuʁ/", vietnamese: "Xin chào (ban ngày/lịch sự)", example: "Bonjour, comment allez-vous ?" },
+      { french: "Salut", ipa: "/sa.ly/", vietnamese: "Chào bạn / Tạm biệt (thân mật)", example: "Salut Paul !" },
+      { french: "Merci", ipa: "/mɛʁ.si/", vietnamese: "Cảm ơn", example: "Merci beaucoup !" },
+      { french: "S'il vous plaît", ipa: "/sil vu plɛ/", vietnamese: "Làm ơn / Xin vui lòng", example: "Un café, s'il vous plaît." },
+      { french: "Au revoir", ipa: "/o ʁə.vwaʁ/", vietnamese: "Tạm biệt", example: "Au revoir et à bientôt !" },
+      { french: "Enchanté", ipa: "/ɑ̃.ʃɑ̃.te/", vietnamese: "Rất vui được gặp bạn", example: "Enchanté de faire votre connaissance." }
+    ],
+    exercises: [
+      {
+        type: "flashcard",
+        prompt: "Làm quen với từ vựng mới",
+        french: "Bonjour",
+        ipa: "/bɔ̃.ʒuʁ/",
+        vietnamese: "Xin chào (lịch sự / ban ngày)",
+        hint: "Dùng phổ biến nhất từ sáng đến chiều tối."
+      },
+      {
+        type: "choice",
+        prompt: "Từ nào trong tiếng Pháp có nghĩa là 'Cảm ơn'?",
+        audio: "Merci",
+        options: ["Bonjour", "Merci", "Au revoir", "Salut"],
+        answer: 1,
+        explanation: "'Merci' nghĩa là Cảm ơn. 'Bonjour' là Xin chào."
+      },
+      {
+        type: "listen",
+        prompt: "Nghe và chọn nghĩa tiếng Việt chính xác:",
+        audio: "Au revoir",
+        options: ["Xin chào", "Làm ơn", "Tạm biệt", "Rất vui được gặp bạn"],
+        answer: 2,
+        explanation: "'Au revoir' nghĩa là Tạm biệt."
+      },
+      {
+        type: "scramble",
+        prompt: "Sắp xếp các từ để tạo thành câu: 'Làm ơn, một ly cà phê.'",
+        frenchAudio: "Un café, s'il vous plaît",
+        words: ["s'il", "Un", "café,", "vous", "plaît"],
+        targetOrder: ["Un", "café,", "s'il", "vous", "plaît"],
+        meaning: "Un café, s'il vous plaît."
+      },
+      {
+        type: "choice",
+        prompt: "Khi gặp ai đó lần đầu tiên, bạn sẽ nói gì để thể hiện 'Rất hân hạnh'?",
+        audio: "Enchanté",
+        options: ["Pardon", "Enchanté", "Bonne nuit", "De rien"],
+        answer: 1,
+        explanation: "'Enchanté' dùng khi làm quen, nghĩa là Rất hân hạnh được gặp bạn."
+      }
+    ]
+  },
+  {
+    id: 2,
+    title: "Bài 2: Đại từ & Động từ 'Être' (Thì/Là/Ở)",
+    subtitle: "Pronoms & Verbe Être",
+    icon: "🧍",
+    desc: "Cột trụ ngữ pháp tiếng Pháp: Cách nói 'Tôi là...', 'Bạn là...'",
+    xpReward: 25,
+    vocab: [
+      { french: "Je suis", ipa: "/ʒə sɥi/", vietnamese: "Tôi là", example: "Je suis vietnamien." },
+      { french: "Tu es", ipa: "/ty ɛ/", vietnamese: "Bạn là (thân mật)", example: "Tu es étudiant ?" },
+      { french: "Il est", ipa: "/il ɛ/", vietnamese: "Anh ấy là", example: "Il est gentil." },
+      { french: "Elle est", ipa: "/ɛl ɛ/", vietnamese: "Cô ấy là", example: "Elle est française." },
+      { french: "Vietnamien", ipa: "/vjɛt.na.mjɛ̃/", vietnamese: "Người Việt Nam (nam)", example: "Je suis vietnamien." },
+      { french: "Français", ipa: "/fʁɑ̃.sɛ/", vietnamese: "Người Pháp (nam)", example: "Il est français." }
+    ],
+    exercises: [
+      {
+        type: "flashcard",
+        prompt: "Ngữ pháp cốt lõi",
+        french: "Je suis",
+        ipa: "/ʒə sɥi/",
+        vietnamese: "Tôi là / Tôi thì",
+        hint: "Động từ 'Être' chia với ngôi 'Je' (Tôi)."
+      },
+      {
+        type: "choice",
+        prompt: "Điền vào chỗ trống: 'Je _____ vietnamien.' (Tôi là người Việt Nam)",
+        audio: "Je suis vietnamien",
+        options: ["es", "est", "suis", "sommes"],
+        answer: 2,
+        explanation: "Với chủ ngữ 'Je' (Tôi), động từ Être chia là 'suis': Je suis."
+      },
+      {
+        type: "scramble",
+        prompt: "Sắp xếp thành câu: 'Cô ấy là người Pháp.'",
+        frenchAudio: "Elle est française",
+        words: ["est", "Elle", "française"],
+        targetOrder: ["Elle", "est", "française"],
+        meaning: "Elle est française."
+      },
+      {
+        type: "listen",
+        prompt: "Nghe và xác định câu bạn nghe được:",
+        audio: "Tu es prêt",
+        options: ["Je suis prêt", "Tu es prêt", "Il est prêt", "Elle est prête"],
+        answer: 1,
+        explanation: "Âm phát ra là 'Tu es prêt' (Bạn đã sẵn sàng chưa)."
+      }
+    ]
+  },
+  {
+    id: 3,
+    title: "Bài 3: Danh từ & Mạo từ Giống Đực / Giống Cái",
+    subtitle: "Masculin et Féminin",
+    icon: "☕",
+    desc: "Tiếng Pháp phân biệt đồ vật giống đực (un / le) và giống cái (une / la).",
+    xpReward: 25,
+    vocab: [
+      { french: "Un café", ipa: "/œ̃ ka.fe/", vietnamese: "Một cốc cà phê (giống đực)", example: "Je voudrais un café." },
+      { french: "Une pomme", ipa: "/yn pɔm/", vietnamese: "Một quả táo (giống cái)", example: "C'est une pomme rouge." },
+      { french: "Le pain", ipa: "/lə pɛ̃/", vietnamese: "Bánh mì (giống đực)", example: "Le pain est chaud." },
+      { french: "La maison", ipa: "/la mɛ.zɔ̃/", vietnamese: "Ngôi nhà (giống cái)", example: "La maison est grande." },
+      { french: "De l'eau", ipa: "/də lo/", vietnamese: "Nước uống", example: "Un verre d'eau, s'il vous plaît." }
+    ],
+    exercises: [
+      {
+        type: "choice",
+        prompt: "Mạo từ nào dùng cho danh từ GIỐNG CÁI (số ít, không xác định)?",
+        audio: "Une",
+        options: ["Un", "Une", "Le", "Les"],
+        answer: 1,
+        explanation: "'Un' là giống đực, 'Une' là giống cái. Ví dụ: une pomme (quả táo)."
+      },
+      {
+        type: "choice",
+        prompt: "'Une pomme' có nghĩa là gì?",
+        audio: "Une pomme",
+        options: ["Một tách cà phê", "Một quả táo", "Một ổ bánh mì", "Một cốc nước"],
+        answer: 1,
+        explanation: "'Pomme' trong tiếng Pháp là quả táo."
+      },
+      {
+        type: "scramble",
+        prompt: "Sắp xếp thành câu: 'Bánh mì thì ngon.'",
+        frenchAudio: "Le pain est bon",
+        words: ["est", "pain", "Le", "bon"],
+        targetOrder: ["Le", "pain", "est", "bon"],
+        meaning: "Le pain est bon."
+      }
+    ]
+  },
+  {
+    id: 4,
+    title: "Bài 4: Số đếm 1 đến 10",
+    subtitle: "Les Chiffres de 1 à 10",
+    icon: "🔢",
+    desc: "Tập đếm các số cơ bản trong tiếng Pháp.",
+    xpReward: 20,
+    vocab: [
+      { french: "Un", ipa: "/œ̃/", vietnamese: "Số 1", example: "Un ticket." },
+      { french: "Deux", ipa: "/dø/", vietnamese: "Số 2", example: "Deux cafés." },
+      { french: "Trois", ipa: "/tʁwa/", vietnamese: "Số 3", example: "Trois personnes." },
+      { french: "Quatre", ipa: "/katʁ/", vietnamese: "Số 4", example: "Quatre saisons." },
+      { french: "Cinq", ipa: "/sɛ̃k/", vietnamese: "Số 5", example: "Cinq minutes." },
+      { french: "Six", ipa: "/sis/", vietnamese: "Số 6", example: "Six euros." },
+      { french: "Sept", ipa: "/sɛt/", vietnamese: "Số 7", example: "Sept jours." },
+      { french: "Huit", ipa: "/ɥit/", vietnamese: "Số 8", example: "Huit heures." },
+      { french: "Neuf", ipa: "/nœf/", vietnamese: "Số 9", example: "Neuf mois." },
+      { french: "Dix", ipa: "/dis/", vietnamese: "Số 10", example: "Dix sur dix." }
+    ],
+    exercises: [
+      {
+        type: "choice",
+        prompt: "Số 'Trois' trong tiếng Pháp là số mấy?",
+        audio: "Trois",
+        options: ["Số 1", "Số 2", "Số 3", "Số 4"],
+        answer: 2,
+        explanation: "Un (1), Deux (2), Trois (3)."
+      },
+      {
+        type: "listen",
+        prompt: "Nghe phát âm và chọn số chính xác:",
+        audio: "Cinq",
+        options: ["Số 4 (Quatre)", "Số 5 (Cinq)", "Số 6 (Six)", "Số 7 (Sept)"],
+        answer: 1,
+        explanation: "'Cinq' là số 5."
+      },
+      {
+        type: "scramble",
+        prompt: "Xếp thứ tự tăng dần: '1, 2, 3'",
+        frenchAudio: "Un deux trois",
+        words: ["Deux", "Trois", "Un"],
+        targetOrder: ["Un", "Deux", "Trois"],
+        meaning: "Un, deux, trois."
+      }
+    ]
+  }
+];
+
+</script>
+<script>
+// LingoFrançais - Mobile Application Logic
+(function () {
+  // STATE MANAGEMENT
+  let state = {
+    xp: parseInt(localStorage.getItem('lingo_xp') || '0', 10),
+    streak: parseInt(localStorage.getItem('lingo_streak') || '1', 10),
+    hearts: 5,
+    completedLessons: JSON.parse(localStorage.getItem('lingo_completed') || '[]')
+  };
+
+  function saveState() {
+    localStorage.setItem('lingo_xp', state.xp.toString());
+    localStorage.setItem('lingo_streak', state.streak.toString());
+    localStorage.setItem('lingo_completed', JSON.stringify(state.completedLessons));
+    updateStatsUI();
+  }
+
+  // AUDIO & SOUND SYNTHESIS
+  const AudioEngine = {
+    ctx: null,
+    init() {
+      if (!this.ctx) {
+        const AudioCtx = window.AudioContext || window.webkitAudioContext;
+        if (AudioCtx) this.ctx = new AudioCtx();
+      }
+      if (this.ctx && this.ctx.state === 'suspended') {
+        this.ctx.resume();
+      }
+    },
+    playTone(freq, type, duration, delay = 0) {
+      this.init();
+      if (!this.ctx) return;
+      const osc = this.ctx.createOscillator();
+      const gain = this.ctx.createGain();
+      osc.type = type;
+      osc.frequency.setValueAtTime(freq, this.ctx.currentTime + delay);
+      gain.gain.setValueAtTime(0.15, this.ctx.currentTime + delay);
+      gain.gain.exponentialRampToValueAtTime(0.001, this.ctx.currentTime + delay + duration);
+      osc.connect(gain);
+      gain.connect(this.ctx.destination);
+      osc.start(this.ctx.currentTime + delay);
+      osc.stop(this.ctx.currentTime + delay + duration);
+    },
+    playSuccess() {
+      this.playTone(523.25, 'triangle', 0.15, 0); // C5
+      this.playTone(659.25, 'triangle', 0.25, 0.1); // E5
+    },
+    playWrong() {
+      this.playTone(220, 'sawtooth', 0.2, 0);
+      this.playTone(196, 'sawtooth', 0.25, 0.15);
+    },
+    playComplete() {
+      const notes = [440, 554.37, 659.25, 880];
+      notes.forEach((freq, i) => this.playTone(freq, 'triangle', 0.3, i * 0.12));
+    }
+  };
+
+  // SPEECH SYNTHESIS (FRENCH)
+  function speakFrench(text) {
+    if (!('speechSynthesis' in window)) return;
+    window.speechSynthesis.cancel();
+    const utterance = new SpeechSynthesisUtterance(text);
+    utterance.lang = 'fr-FR';
+    utterance.rate = 0.85; // slightly slower for language learners
+    window.speechSynthesis.speak(utterance);
+  }
+
+  // DOM ELEMENTS
+  const xpCountEl = document.getElementById('xp-count');
+  const streakCountEl = document.getElementById('streak-count');
+  const heartsCountEl = document.getElementById('hearts-count');
+  const lessonsListEl = document.getElementById('lessons-list');
+  const vocabListEl = document.getElementById('vocab-list');
+  const quizScreen = document.getElementById('quiz-screen');
+  const quizBody = document.getElementById('quiz-body');
+  const quizProgressBar = document.getElementById('quiz-progress-bar');
+  const quizHeartsCount = document.getElementById('quiz-hearts-count');
+  const quizActionBtn = document.getElementById('quiz-action-btn');
+  const feedbackSheet = document.getElementById('feedback-sheet');
+  const feedbackTitle = document.getElementById('feedback-title');
+  const feedbackDesc = document.getElementById('feedback-desc');
+  const quizCloseBtn = document.getElementById('quiz-close-btn');
+
+  // UPDATE HEADER UI
+  function updateStatsUI() {
+    xpCountEl.textContent = state.xp;
+    streakCountEl.textContent = state.streak;
+    heartsCountEl.textContent = state.hearts;
+    quizHeartsCount.textContent = state.hearts;
+
+    const profileCompleted = document.getElementById('profile-completed-count');
+    const profileXp = document.getElementById('profile-total-xp');
+    if (profileCompleted) profileCompleted.textContent = state.completedLessons.length;
+    if (profileXp) profileXp.textContent = state.xp;
+  }
+
+  // RENDER LESSONS
+  function renderLessons() {
+    lessonsListEl.innerHTML = '';
+    LESSONS_DATA.forEach((lesson) => {
+      const isCompleted = state.completedLessons.includes(lesson.id);
+      const card = document.createElement('div');
+      card.className = `lesson-card ${isCompleted ? 'completed' : ''}`;
+      card.innerHTML = `
+        <div class="lesson-icon-box">${lesson.icon}</div>
+        <div class="lesson-info">
+          <div class="lesson-heading">${lesson.title}</div>
+          <div class="lesson-sub">${lesson.subtitle} • +${lesson.xpReward} XP</div>
+          <span class="lesson-badge ${isCompleted ? 'badge-done' : 'badge-new'}">
+            ${isCompleted ? '✓ Đã hoàn thành' : 'Chưa học'}
+          </span>
+        </div>
+        <div style="font-size: 20px; color: var(--text-muted); font-weight: 700;">➔</div>
+      `;
+      card.addEventListener('click', () => startQuiz(lesson));
+      lessonsListEl.appendChild(card);
+    });
+  }
+
+  // RENDER VOCABULARY
+  function renderVocabulary() {
+    vocabListEl.innerHTML = '';
+    LESSONS_DATA.forEach((lesson) => {
+      const sectionHeader = document.createElement('h3');
+      sectionHeader.style.cssText = 'font-size: 14px; color: var(--text-muted); margin: 16px 0 8px 0; text-transform: uppercase;';
+      sectionHeader.textContent = lesson.title;
+      vocabListEl.appendChild(sectionHeader);
+
+      lesson.vocab.forEach((item) => {
+        const itemCard = document.createElement('div');
+        itemCard.className = 'vocab-card';
+        itemCard.innerHTML = `
+          <div>
+            <div class="vocab-fr">${item.french} <span class="vocab-ipa">${item.ipa}</span></div>
+            <div class="vocab-vn">${item.vietnamese}</div>
+            <div style="font-size: 11px; color: var(--text-muted); margin-top: 3px;">VD: "${item.example}"</div>
+          </div>
+          <button class="speak-icon-btn" title="Nghe phát âm">🔊</button>
+        `;
+        itemCard.querySelector('.speak-icon-btn').addEventListener('click', () => {
+          speakFrench(item.french);
+        });
+        vocabListEl.appendChild(itemCard);
+      });
+    });
+  }
+
+  // TAB SWITCHING
+  document.querySelectorAll('.tab-btn').forEach((btn) => {
+    btn.addEventListener('click', () => {
+      document.querySelectorAll('.tab-btn').forEach((b) => b.classList.remove('active'));
+      document.querySelectorAll('.main-view').forEach((v) => (v.style.display = 'none'));
+
+      btn.classList.add('active');
+      const targetView = btn.getAttribute('data-view');
+      document.getElementById(`view-${targetView}`).style.display = 'block';
+
+      if (targetView === 'vocab') renderVocabulary();
+    });
+  });
+
+  // QUIZ ENGINE
+  let currentLesson = null;
+  let currentExerciseIndex = 0;
+  let quizAnswerState = 'answering'; // 'answering' | 'checked'
+  let selectedOption = null;
+  let currentScrambleWords = [];
+  let userScrambleOrder = [];
+
+  function startQuiz(lesson) {
+    currentLesson = lesson;
+    currentExerciseIndex = 0;
+    quizScreen.style.display = 'flex';
+    loadExercise();
+  }
+
+  function loadExercise() {
+    quizAnswerState = 'answering';
+    feedbackSheet.className = 'feedback-sheet';
+    feedbackSheet.style.display = 'none';
+    quizActionBtn.textContent = 'Kiểm tra';
+    quizActionBtn.disabled = true;
+    quizActionBtn.style.background = 'var(--primary)';
+
+    const total = currentLesson.exercises.length;
+    const progressPercent = (currentExerciseIndex / total) * 100;
+    quizProgressBar.style.width = `${progressPercent}%`;
+
+    const ex = currentLesson.exercises[currentExerciseIndex];
+    quizBody.innerHTML = '';
+
+    if (ex.type === 'flashcard') {
+      renderFlashcardExercise(ex);
+    } else if (ex.type === 'choice') {
+      renderChoiceExercise(ex);
+    } else if (ex.type === 'listen') {
+      renderListenExercise(ex);
+    } else if (ex.type === 'scramble') {
+      renderScrambleExercise(ex);
+    }
+  }
+
+  // Exercise: Flashcard
+  function renderFlashcardExercise(ex) {
+    quizBody.innerHTML = `
+      <div class="quiz-prompt">${ex.prompt}</div>
+      <div class="flashcard-box">
+        <div class="flashcard-word">${ex.french}</div>
+        <div class="flashcard-ipa">${ex.ipa}</div>
+        <button class="audio-btn-large" id="btn-fc-audio">🔊</button>
+        <div class="flashcard-vn">${ex.vietnamese}</div>
+        ${ex.hint ? `<div style="font-size: 12px; color: var(--text-muted); margin-top: 10px;">💡 ${ex.hint}</div>` : ''}
+      </div>
+    `;
+    document.getElementById('btn-fc-audio').addEventListener('click', () => speakFrench(ex.french));
+    speakFrench(ex.french);
+    quizActionBtn.textContent = 'Đã hiểu & Tiếp tục';
+    quizActionBtn.disabled = false;
+  }
+
+  // Exercise: Multiple Choice
+  function renderChoiceExercise(ex) {
+    quizBody.innerHTML = `
+      <div class="quiz-prompt">${ex.prompt}</div>
+      ${ex.audio ? `<button class="audio-btn-large" id="btn-choice-audio">🔊</button>` : ''}
+      <div class="options-grid" id="options-box"></div>
+    `;
+
+    if (ex.audio) {
+      document.getElementById('btn-choice-audio').addEventListener('click', () => speakFrench(ex.audio));
+      speakFrench(ex.audio);
+    }
+
+    const box = document.getElementById('options-box');
+    selectedOption = null;
+
+    ex.options.forEach((optText, idx) => {
+      const btn = document.createElement('button');
+      btn.className = 'option-btn';
+      btn.textContent = optText;
+      btn.addEventListener('click', () => {
+        if (quizAnswerState === 'checked') return;
+        document.querySelectorAll('.option-btn').forEach((b) => b.classList.remove('selected'));
+        btn.classList.add('selected');
+        selectedOption = idx;
+        quizActionBtn.disabled = false;
+      });
+      box.appendChild(btn);
+    });
+  }
+
+  // Exercise: Listen & Choose
+  function renderListenExercise(ex) {
+    quizBody.innerHTML = `
+      <div class="quiz-prompt">${ex.prompt}</div>
+      <button class="audio-btn-large" id="btn-listen-audio">🔊</button>
+      <div style="text-align: center; font-size: 12px; color: var(--text-muted); margin-top: -15px; margin-bottom: 20px;">Chạm vào loa để nghe lại</div>
+      <div class="options-grid" id="options-box"></div>
+    `;
+
+    document.getElementById('btn-listen-audio').addEventListener('click', () => speakFrench(ex.audio));
+    speakFrench(ex.audio);
+
+    const box = document.getElementById('options-box');
+    selectedOption = null;
+
+    ex.options.forEach((optText, idx) => {
+      const btn = document.createElement('button');
+      btn.className = 'option-btn';
+      btn.textContent = optText;
+      btn.addEventListener('click', () => {
+        if (quizAnswerState === 'checked') return;
+        document.querySelectorAll('.option-btn').forEach((b) => b.classList.remove('selected'));
+        btn.classList.add('selected');
+        selectedOption = idx;
+        quizActionBtn.disabled = false;
+      });
+      box.appendChild(btn);
+    });
+  }
+
+  // Exercise: Sentence Scramble
+  function renderScrambleExercise(ex) {
+    userScrambleOrder = [];
+    currentScrambleWords = [...ex.words];
+
+    quizBody.innerHTML = `
+      <div class="quiz-prompt">${ex.prompt}</div>
+      ${ex.frenchAudio ? `<button class="speak-icon-btn" style="margin-bottom: 12px;" id="btn-scramble-audio" title="Nghe câu hoàn chỉnh">🔊</button>` : ''}
+      <div class="scramble-zone" id="scramble-zone"></div>
+      <div class="word-pool" id="word-pool"></div>
+    `;
+
+    if (ex.frenchAudio) {
+      document.getElementById('btn-scramble-audio').addEventListener('click', () => speakFrench(ex.frenchAudio));
+    }
+
+    const zone = document.getElementById('scramble-zone');
+    const pool = document.getElementById('word-pool');
+
+    function updateScrambleUI() {
+      zone.innerHTML = '';
+      if (userScrambleOrder.length === 0) {
+        zone.innerHTML = '<span style="color: #94a3b8; font-size: 13px;">Chạm các từ bên dưới để xếp vào đây...</span>';
+      } else {
+        userScrambleOrder.forEach((word, index) => {
+          const chip = document.createElement('button');
+          chip.className = 'word-chip';
+          chip.textContent = word;
+          chip.addEventListener('click', () => {
+            if (quizAnswerState === 'checked') return;
+            userScrambleOrder.splice(index, 1);
+            updateScrambleUI();
+          });
+          zone.appendChild(chip);
+        });
+      }
+
+      pool.innerHTML = '';
+      currentScrambleWords.forEach((word) => {
+        const countInUser = userScrambleOrder.filter((w) => w === word).length;
+        const countTotal = currentScrambleWords.filter((w) => w === word).length;
+        const isUsed = countInUser >= countTotal;
+
+        const chip = document.createElement('button');
+        chip.className = `word-chip ${isUsed ? 'used' : ''}`;
+        chip.textContent = word;
+        chip.addEventListener('click', () => {
+          if (quizAnswerState === 'checked' || isUsed) return;
+          userScrambleOrder.push(word);
+          speakFrench(word);
+          updateScrambleUI();
+        });
+        pool.appendChild(chip);
+      });
+
+      quizActionBtn.disabled = userScrambleOrder.length === 0;
+    }
+
+    updateScrambleUI();
+  }
+
+  // HANDLE QUIZ ACTION BUTTON CLICK
+  quizActionBtn.addEventListener('click', () => {
+    const ex = currentLesson.exercises[currentExerciseIndex];
+
+    if (quizAnswerState === 'checked') {
+      // Proceed to next exercise
+      currentExerciseIndex++;
+      if (currentExerciseIndex < currentLesson.exercises.length) {
+        loadExercise();
+      } else {
+        finishLesson();
+      }
+      return;
+    }
+
+    // Checking answers
+    if (ex.type === 'flashcard') {
+      currentExerciseIndex++;
+      if (currentExerciseIndex < currentLesson.exercises.length) {
+        loadExercise();
+      } else {
+        finishLesson();
+      }
+      return;
+    }
+
+    let isCorrect = false;
+    let detailText = ex.explanation || '';
+
+    if (ex.type === 'choice' || ex.type === 'listen') {
+      isCorrect = selectedOption === ex.answer;
+      if (!isCorrect && !detailText) {
+        detailText = `Đáp án đúng là: ${ex.options[ex.answer]}`;
+      }
+    } else if (ex.type === 'scramble') {
+      isCorrect = JSON.stringify(userScrambleOrder) === JSON.stringify(ex.targetOrder);
+      detailText = `Câu đúng: "${ex.meaning}"`;
+    }
+
+    quizAnswerState = 'checked';
+    feedbackSheet.style.display = 'block';
+
+    if (isCorrect) {
+      AudioEngine.playSuccess();
+      feedbackSheet.className = 'feedback-sheet correct';
+      feedbackTitle.innerHTML = '<span>🎉</span><span>Chính xác tuyệt vời!</span>';
+      feedbackDesc.textContent = detailText;
+      quizActionBtn.style.background = 'var(--success-dark)';
+      quizActionBtn.textContent = 'Tiếp tục';
+    } else {
+      AudioEngine.playWrong();
+      feedbackSheet.className = 'feedback-sheet wrong';
+      feedbackTitle.innerHTML = '<span>❌</span><span>Chưa chính xác rồi</span>';
+      feedbackDesc.textContent = detailText;
+      state.hearts = Math.max(0, state.hearts - 1);
+      updateStatsUI();
+      quizActionBtn.style.background = 'var(--error-dark)';
+      quizActionBtn.textContent = 'Đã hiểu';
+    }
+  });
+
+  // FINISH LESSON
+  function finishLesson() {
+    AudioEngine.playComplete();
+    quizProgressBar.style.width = '100%';
+
+    if (!state.completedLessons.includes(currentLesson.id)) {
+      state.completedLessons.push(currentLesson.id);
+      state.xp += currentLesson.xpReward;
+      saveState();
+    }
+
+    quizBody.innerHTML = `
+      <div style="text-align: center; margin: auto 0; padding: 20px;">
+        <div style="font-size: 64px; animation: bounce 1s infinite;">🏆</div>
+        <h2 style="font-size: 24px; font-weight: 800; color: var(--text); margin-top: 16px;">Hoàn thành xuất sắc!</h2>
+        <p style="color: var(--text-muted); font-size: 14px; margin-top: 6px;">Bạn đã hoàn thành ${currentLesson.title}</p>
+        
+        <div style="display: flex; justify-content: center; gap: 20px; margin-top: 24px;">
+          <div style="background: #fef3c7; border: 1px solid #fde68a; padding: 14px 20px; border-radius: 16px;">
+            <div style="font-size: 13px; color: #92400e; font-weight: 700;">+${currentLesson.xpReward} XP</div>
+            <div style="font-size: 18px; font-weight: 800; color: #d97706;">⚡ Kinh nghiệm</div>
+          </div>
+          <div style="background: #fff7ed; border: 1px solid #ffedd5; padding: 14px 20px; border-radius: 16px;">
+            <div style="font-size: 13px; color: #9a3412; font-weight: 700;">+1 Ngày</div>
+            <div style="font-size: 18px; font-weight: 800; color: #ea580c;">🔥 Streak</div>
+          </div>
+        </div>
+      </div>
+    `;
+
+    feedbackSheet.style.display = 'none';
+    quizActionBtn.textContent = 'Hoàn tất';
+    quizActionBtn.style.background = 'var(--primary)';
+    quizActionBtn.disabled = false;
+
+    quizActionBtn.onclick = () => {
+      quizScreen.style.display = 'none';
+      renderLessons();
+      quizActionBtn.onclick = null;
+    };
+  }
+
+  // CLOSE QUIZ
+  quizCloseBtn.addEventListener('click', () => {
+    if (confirm('Bạn có chắc muốn thoát bài học đang làm dở?')) {
+      quizScreen.style.display = 'none';
+    }
+  });
+
+  // RESET DATA BUTTON
+  const resetBtn = document.getElementById('btn-reset-data');
+  if (resetBtn) {
+    resetBtn.addEventListener('click', () => {
+      if (confirm('Bạn có chắc muốn xóa tiến độ và bắt đầu lại từ đầu?')) {
+        localStorage.clear();
+        state = { xp: 0, streak: 1, hearts: 5, completedLessons: [] };
+        saveState();
+        renderLessons();
+        alert('Đã đặt lại dữ liệu thành công.');
+      }
+    });
+  }
+
+  // INITIALIZE
+  updateStatsUI();
+  renderLessons();
+})();
+
+</script>
+</body>
+</html>
